@@ -1,73 +1,60 @@
 import os
-import shutil
-from pyrogram import Client, filters, enums
-from telegraph import upload_file 
-#import sudo_filter
-from pyrogram.types import Message
-from pyrogram.types.messages_and_media import message
+import asyncio
+from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message, CallbackQuery
+from telegraph import upload_file
 
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-
-def get_file_id(msg: Message):
-    if msg.media:
-        for message_type in (
-            "photo",
-            "animation",
-            "audio",
-            "document",
-            "video",
-            "video_note",
-            "voice",
-            # "contact",
-            # "dice",
-            # "poll",
-            # "location",
-            # "venue",
-            "sticker"
-        ):
-            obj = getattr(msg, message_type)
-            if obj:
-                setattr(obj, "message_type", message_type)
-                return obj
-TMP_DOWNLOAD_DIRECTORY ="./DOWNLOADS/"
-
-@Client.on_message(filters.command("telegraph"))
+@Client.on_message(filters.private & filters.command(["tg", "tgraph", "telegraph"]))
 async def telegraph(client, message):
     replied = message.reply_to_message
     if not replied:
-        await message.reply_text("Reply to a supported media file")
+        await message.reply("Reply to a supported media file")
         return
-    file_info = get_file_id(replied)
-    if not file_info:
-        await message.reply_text("Not supported!")
-        return
-    _t = os.path.join(
-        TMP_DOWNLOAD_DIRECTORY,
-        str(replied.message_id)
+    if not (
+        (replied.photo and replied.photo.file_size <= 5242880)
+        or (replied.animation and replied.animation.file_size <= 5242880)
+        or (
+            replied.video
+            and replied.video.file_name.endswith(".mp4")
+            and replied.video.file_size <= 5242880
+        )
+        or (
+            replied.document
+            and replied.document.file_name.endswith(
+                (".jpg", ".jpeg", ".png", ".gif", ".mp4"),
+            )
+            and replied.document.file_size <= 5242880
+        )
+    ):
+        await message.reply("Not supported!")
+        return    
+    download_location = await client.download_media(
+        message=message.reply_to_message,
+        file_name="root/downloads/",
     )
-    if not os.path.isdir(_t):
-        os.makedirs(_t)
-    _t += "/"
-    download_location = await replied.download(
-        _t
+    mkn=await message.reply_text(
+        text="<code>Trying to processing please weit.....</code>",
+        disable_web_page_preview=True
     )
+    await asyncio.sleep(2)
+    await mkn.delete()
     try:
         response = upload_file(download_location)
     except Exception as document:
-        await message.reply_text(message, text=document)
+        await message.reply(message, text=document)
     else:
-        buttons = [[
-                InlineKeyboardButton('🔗 Telegraph Link', url=f'https://telegra.ph{response[0]}')
-            ]]
-        reply_markup=InlineKeyboardMarkup(buttons)
-         
         await message.reply(
-            f"`https://telegra.ph{response[0]}`",
-            disable_web_page_preview=True,
-            reply_markup=reply_markup
+            text=f"<b>Link:-</b>\n\n <code>https://telegra.ph{response[0]}</code>",
+            quote=True,
+            reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(text="open link", url=f"https://telegra.ph{response[0]}"),
+                    InlineKeyboardButton(text="share link", url=f"https://telegram.me/share/url?url=https://telegra.ph{response[0]}")
+                ],
+                [InlineKeyboardButton(text="✗ Close ✗", callback_data="close")]
+            ]
         )
+    )
     finally:
-        shutil.rmtree(
-            _t,
-            ignore_errors=True
-        )
+        os.remove(download_location)
