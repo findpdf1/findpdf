@@ -1,10 +1,11 @@
+import os
 import asyncio
 from info import FORCE_SUB
 from pyrogram import Client
 from pyrogram.errors import FloodWait, UserNotParticipant
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 
-
+FORCE_SUB = os.environ.get("FORCE_SUB", None)
 async def ForceSub(bot: Client, event: Message):
     try:
         invite_link = await bot.create_chat_invite_link(chat_id=(int(FORCE_SUB) if FORCE_SUB.startswith("-100") else FORCE_SUB))
