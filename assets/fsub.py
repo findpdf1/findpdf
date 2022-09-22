@@ -4,7 +4,7 @@ from pyrogram import Client
 from pyrogram.errors import FloodWait, UserNotParticipant
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 
-@Client.on_message(filtes.private & filters.incoming & filters.text)
+
 async def ForceSub(bot: Client, event: Message):
     try:
         invite_link = await bot.create_chat_invite_link(chat_id=(int(FORCE_SUB) if FORCE_SUB.startswith("-100") else FORCE_SUB))
@@ -49,5 +49,10 @@ async def ForceSub(bot: Client, event: Message):
         return 200
 
 
+@Client.on_message(filtes.private & filters.incoming & filters.text)
+async def forcesub(client, message):
+    FSub = await ForceSub(client, message)
+    if FSub == 400:
+        return
 
   
