@@ -33,7 +33,7 @@ async def answer(bot, query):
     if AUTH_CHANNEL and not await is_subscribed(bot, query):
         await query.answer(results=[],
                            cache_time=0,
-                           switch_pm_text=' Botഉപയോഗിക്കുവാൻ ആദ്യംഞങ്ങളുടെ ചാനലിൽJoinചെയ്യുക',
+                           switch_pm_text=' Botഉപയോഗിക്കുവാൻ ഇവിടെclickചെയ്യുക',
                            switch_pm_parameter="subscribe")
         return
 
