@@ -119,14 +119,16 @@ This module only works for my admins
 
 <b>🆓 Free Storage</b> : <code>{}</code> MIB
 
-© <b>@FindPDFbot</b>"""
+© <b>@FindPDFbot + @Pdf4uBot</b>"""
  
     LOG_TEXT_G = """#NewGroup
 Group = {}(<code>{}</code>)
 Total Members = <code>{}</code>
 Added By - {}
+#Pdf4uBot
 """
     LOG_TEXT_P = """#NewUser
 ID - <code>{}</code>
 Name - {}
+#Pdf4uBot
 """
