@@ -41,7 +41,7 @@ async def give_filter(client, message):
 async def next_page(bot, query):
     ident, req, key, offset = query.data.split("_")
     if int(req) not in [query.from_user.id, 0]:
-        return await query.answer("oKda", show_alert=True)
+        return await query.answer("എന്തുവാ ഈ കാണിക്കുന്നത് 😬", show_alert=True)
     try:
         offset = int(offset)
     except:
@@ -127,7 +127,7 @@ async def advantage_spoll_choker(bot, query):
     if not movies:
         return await query.answer("You are clicking on an old button which is expired.", show_alert=True)
     movie = movies[(int(movie_))]
-    await query.answer('Checking for Movie in database...')
+    await query.answer('Checking for pdf in database...')
     k = await manual_filters(bot, query.message, text=movie)
     if k == False:
         files, offset, total_results = await get_search_results(movie, offset=0, filter=True)
@@ -135,7 +135,7 @@ async def advantage_spoll_choker(bot, query):
             k = (movie, files, offset, total_results)
             await auto_filter(bot, query, k)
         else:
-            k = await query.message.edit('This Movie Not Found In DataBase')
+            k = await query.message.edit('This PDF Not Found In DataBase')
             await asyncio.sleep(10)
             await k.delete()
 
@@ -364,7 +364,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                     caption=f_caption,
                     protect_content=True if ident == "filep" else False 
                 )
-                await query.answer('Check PM, I have sent files in pm', show_alert=True)
+                await query.answer('Check PM, I have sent PDF files in pm', show_alert=True)
         except UserIsBlocked:
             await query.answer('Unblock the bot mahn !', show_alert=True)
         except PeerIdInvalid:
@@ -404,6 +404,19 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.answer()
     elif query.data == "start":
         buttons = [[
+            InlineKeyboardButton ('how to use me🤔', url='https://telegram.me/pdfmalayalam/5707'),
+            InlineKeyboardButton('➕ Add Me ➕', url=f'http://t.me/{temp.U_NAME}?startgroup=true')
+            ],[
+            InlineKeyboardButton('🔍 Search PDF file', switch_inline_query_current_chat='')
+            ],[
+            InlineKeyboardButton('🗒️ Main Channel', url='https://t.me/pdfmalayalam'),
+            InlineKeyboardButton('📚 pdfonly chnl', url='https://t.me/scpdfs')
+            ],[
+            InlineKeyboardButton('📚 Group', url='https://t.me/onlinestorylovers'),
+            InlineKeyboardButton('ℹ️ Help', callback_data='help'),
+            InlineKeyboardButton('👤 About', callback_data='about')
+        ]]
+        """buttons = [[
             InlineKeyboardButton('➕ Add Me To Your Groups ➕', url=f'http://t.me/{temp.U_NAME}?startgroup=true')
         ], [
             InlineKeyboardButton('🔍 Search', switch_inline_query_current_chat=''),
@@ -411,7 +424,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         ], [
             InlineKeyboardButton('ℹ️ Help', callback_data='help'),
             InlineKeyboardButton('😊 About', callback_data='about')
-        ]]
+        ]]"""
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
             text=script.START_TXT.format(query.from_user.mention, temp.U_NAME, temp.B_NAME),
@@ -438,8 +451,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
         )
     elif query.data == "about":
         buttons = [[
-            InlineKeyboardButton('🤖 Updates', url='https://t.me/TeamEvamaria'),
-            InlineKeyboardButton('♥️ Source', callback_data='source')
+            InlineKeyboardButton('📚 PDF Updates', url='https://t.me/pdfmalayalam'),
+            InlineKeyboardButton('♥️ Discussion Group', url='https://t.me/onlinestorylovers)
         ], [
             InlineKeyboardButton('🏠 Home', callback_data='start'),
             InlineKeyboardButton('🔐 Close', callback_data='close_data')
@@ -544,7 +557,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.answer("Fetching MongoDb DataBase")
         buttons = [[
             InlineKeyboardButton('👩‍🦯 Back', callback_data='help'),
-            InlineKeyboardButton('♻️', callback_data='rfrsh')
+            InlineKeyboardButton('♻️ Refresh', callback_data='rfrsh')
         ]]
         reply_markup = InlineKeyboardMarkup(buttons)
         total = await Media.count_documents()
@@ -708,7 +721,7 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap = f"Here is what i found for your query {search}"
+        cap = f"Here is what i found for your query {search} \n\n join @pdfmalayalam"
     if imdb and imdb.get('poster'):
         try:
             await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024],
@@ -735,7 +748,7 @@ async def advantage_spell_chok(msg):
     g_s += await search_gagala(msg.text)
     gs_parsed = []
     if not g_s:
-        k = await msg.reply("I couldn't find any movie in that name.")
+        k = await msg.reply("I couldn't find any pdf in that name.")
         await asyncio.sleep(8)
         await k.delete()
         return
@@ -776,8 +789,11 @@ async def advantage_spell_chok(msg):
         )
     ] for k, movie in enumerate(movielist)]
     btn.append([InlineKeyboardButton(text="Close", callback_data=f'spolling#{user}#close_spellcheck')])
-    await msg.reply("I couldn't find anything related to that\nDid you mean any one of these?",
-                    reply_markup=InlineKeyboardMarkup(btn))
+    j = await msg.reply("I couldn't find anything related to that\n നിങ്ങൾ type ചെയ്ത spelling പരിശോധിക്കുക, അല്ലെങ്കിൽ മലയാളത്തിൽ or മംഗ്ലീഷിൽ വീണ്ടും ശ്രമിക്കുക", reply_markup=InlineKeyboardMarkup(btn))
+    await asyncio.sleep(30)
+    await j.delete()
+    """await msg.reply("I couldn't find anything related to that\nDid you mean any one of these?",
+                    reply_markup=InlineKeyboardMarkup(btn))"""
 
 
 async def manual_filters(client, message, text=False):
