@@ -1,39 +1,76 @@
 import os
-import datetime
-from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from pyrogram.errors import UserNotParticipant, ChatAdminRequired, UsernameNotOccupied
+import asyncio
+from pyrogram import Client, filters, __version__
+from pyrogram.enums import ParseMode
+from pyrogram.enums import ChatMemberStatus
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
+from info import ADMINS
 
-FORCE_SUB = "Pdfmalayalam" # os.environ.get("FORCE_SUB", "Pdfmalayalam") if os.environ.get("FORCE_SUB", "") else None
-  
-#@Client.on_message(filters.private & filters.incoming)
+#from config import ADMINS, FORCE_MSG, START_MSG, OWNER_ID, CUSTOM_CAPTION, DISABLE_CHANNEL_BUTTON, PROTECT_CONTENT
+#from helper_func import subscribed, encode, decode, get_messages
+#from database.sql import add_user, query_msg, full_userbase
+
+
+#=====================================================================================##
+FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "-1001368430615"))
+
+FORCE_MSG = """Hello {first}\n\n<b>You need to join in my Channel/Group to use me\n\nKindly Please join Channel</b>"""
+
+#WAIT_MSG = """"<b>Processing ...</b>"""
+
+#REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
+
+#=====================================================================================##
+async def is_subscribed(filter, client, update):
+    if not FORCE_SUB_CHANNEL:
+        return True
+    user_id = update.from_user.id
+    if user_id in ADMINS:
+        return True
+    try:
+        member = await client.get_chat_member(chat_id = FORCE_SUB_CHANNEL, user_id = user_id)
+    except UserNotParticipant:
+        return False
+
+    if not member.status in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.MEMBER]:
+        return False
+    else:
+        return True
+
+subscribed = filters.create(is_subscribed)
+
 @Client.on_message(filters.command('start') & filters.private)
-async def force_sub(c, m):
-    if FORCE_SUB:
-        try:
-            chat = await c.get_chat_member(FORCE_SUB, m.from_user.id)
-            if chat.status=='kicked':
-                return await m.reply_text('Hai you are kicked from my updates channel. So, you are not able to use me',  quote=True)
+async def not_joined(client: Client, message: Message):
+    buttons = [
+        [
+            InlineKeyboardButton(
+                "Join Channel",
+                url = client.invitelink)
+        ]
+    ]
+    try:
+        buttons.append(
+            [
+                InlineKeyboardButton(
+                    text = 'Try Again',
+                    url = f"https://t.me/{client.username}?start={message.command[1]}"
+                )
+            ]
+        )
+    except IndexError:
+        pass
 
-        except UserNotParticipant:
-            button = [[InlineKeyboardButton('join Updates channel', url=f'https://t.me/Pdfmalayalam')]]
-            markup = InlineKeyboardMarkup(button)
-            return await m.reply_text(text="Hey join in my updates channel to use me.", parse_mode='markdown', reply_markup=markup, quote=True)
+    await message.reply(
+        text = FORCE_MSG.format(
+                first = message.from_user.first_name,
+                last = message.from_user.last_name,
+                username = None if not message.from_user.username else '@' + message.from_user.username,
+                mention = message.from_user.mention,
+                id = message.from_user.id
+            ),
+        reply_markup = InlineKeyboardMarkup(buttons),
+        quote = True,
+        disable_web_page_preview = True
+    )
 
-        except ChatAdminRequired:
-            #logger.warning(f"Make me admin in @{FORCE_SUB}")
-            if m.from_user.id in Config.AUTH_USERS:
-                return await m.reply_text(f"Make me admin in @{FORCE_SUB}")
-
-        except UsernameNotOccupied:
-            #logger.warning("The forcesub username was Incorrect. Please give the correct username.")
-            if m.from_user.id in Config.AUTH_USERS:
-                return await m.reply_text("The forcesub username was Incorrect. Please give the correct username.")
-
-        except Exception as e:
-            if "belongs to a user" in str(e):
-                #logger.warning("Forcesub username must be a channel username Not yours or any other users username")
-                if m.from_user.id in Config.AUTH_USERS:
-                    return await m.reply_text("Forcesub username must be a channel username Not yours or any other users username")
-            #logger.error(e)
-            return await m.reply_text("Some thing went wrong. Try again and if same issue occur contact [Him](https://t.me/vipinpkd)", disable_web_page_preview=True, quote=True)
