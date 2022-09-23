@@ -6,7 +6,8 @@ from pyrogram.errors import UserNotParticipant, ChatAdminRequired, UsernameNotOc
 
 FORCE_SUB = "Pdfmalayalam" # os.environ.get("FORCE_SUB", "Pdfmalayalam") if os.environ.get("FORCE_SUB", "") else None
   
-@Client.on_message(filters.private & filters.incoming)
+#@Client.on_message(filters.private & filters.incoming)
+@Client.on_message(filters.command('start') & filters.private)
 async def force_sub(c, m):
     if FORCE_SUB:
         try:
