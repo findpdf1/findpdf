@@ -88,5 +88,6 @@ def ForceSub(event: Message):
         
         
 @Client.on_message((filters.forwarded | ((filters.regex(tg_link_regex)) & filters.text)) & filters.private & filters.incoming)
-def handler(_, message: Message):
-    if ForceSub(message) == 400: return
+def handler(client, message: Message):
+    if ForceSub(message) == 400:
+    return
