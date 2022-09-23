@@ -20,7 +20,7 @@ FORCE_MSG = """Hello {first}\n\n<b>You need to join in my Channel/Group to use m
 
 #REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
 
-#=====================================================================================##
+
 async def is_subscribed(filter, client, update):
     if not FORCE_SUB_CHANNEL:
         return True
