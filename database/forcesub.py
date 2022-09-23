@@ -20,7 +20,7 @@ class Config:
     JOIN_BUTTON_STR = os.environ.get('JOIN_BUTTON_STR', "Join Our 📚PDF Channel")
  #-----------------------------#
  
- tg_link_regex = "(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$"
+tg_link_regex = "(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$"
 
     
 def ForceSub(event: Message):
