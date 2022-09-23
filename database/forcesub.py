@@ -18,7 +18,10 @@ class Config:
     YOU_ARE_BANNED_STR = os.environ.get('YOU_ARE_BANNED_STR',
         "You are Banned to use me.\n\nfor further queries : {}")
     JOIN_BUTTON_STR = os.environ.get('JOIN_BUTTON_STR', "Join Our 📚PDF Channel")
- #-----------------------------#   
+ #-----------------------------#
+ 
+ tg_link_regex = "(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$"
+
     
 def ForceSub(event: Message):
     """
@@ -82,3 +85,8 @@ def ForceSub(event: Message):
             return 200
     else:
         return 200
+        
+        
+@Client.on_message((filters.forwarded | ((filters.regex(tg_link_regex)) & filters.text)) & filters.private & filters.incoming)
+def handler(_, message: Message):
+    if ForceSub(message) == 400: return
