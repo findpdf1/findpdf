@@ -4,7 +4,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram.errors import UserNotParticipant, ChatAdminRequired, UsernameNotOccupied
 
-FORCE_SUB = os.environ.get("FORCE_SUB", "Pdfmalayalam") if os.environ.get("FORCE_SUB", "") else None
+FORCE_SUB = "Pdfmalayalam" # os.environ.get("FORCE_SUB", "Pdfmalayalam") if os.environ.get("FORCE_SUB", "") else None
   
 @Client.on_message(filters.private & filters.incoming)
 async def force_sub(c, m):
