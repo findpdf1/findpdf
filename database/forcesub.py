@@ -40,7 +40,7 @@ async def is_subscribed(filter, client, update):
 
 subscribed = filters.create(is_subscribed)
 
-@Client.on_message(filters.command('start') & filters.private)
+@Client.on_message(filters.command('help') & filters.private)
 async def not_joined(client: Client, message: Message):
     buttons = [
         [
