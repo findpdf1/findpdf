@@ -12,7 +12,6 @@ from info import ADMINS
 #from database.sql import add_user, query_msg, full_userbase
 
 
-#=====================================================================================##
 FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "-1001368430615"))
 
 FORCE_MSG = """Hello {first}\n\n<b>You need to join in my Channel/Group to use me\n\nKindly Please join Channel</b>"""
