@@ -81,7 +81,7 @@ async def start(client, message):
         btn = [
             [
                 InlineKeyboardButton(
-                    "Join my 📚PdF Channel", url=invite_link.invite_link
+                    "Join my 📚PDF Channel", url=invite_link.invite_link
                 )
             ]
         ]
@@ -96,7 +96,7 @@ async def start(client, message):
         await client.send_message(
             chat_id=message.from_user.id,
             #text="**Please Join My Updates Channel to use this BUpdates
-            text="**Please Join My pdf Channel to use this Bot!** \n\n Bot ഉപയോഗിക്കാൻ താഴെ കാണുന്ന ചാനലിൽ join ചെയ്യുക.👇",
+            text="**Please Join My pdf Channel to use this Bot!** \n\n Bot ഉപയോഗിക്കാൻ താഴെ കാണുന്ന ചാനലിൽ join ചെയ്യുക. അതിനു ശേഷം TryAgain Clickk ചെയ്യുക 👇",
             reply_markup=InlineKeyboardMarkup(btn),
             parse_mode=enums.ParseMode.MARKDOWN
             )
