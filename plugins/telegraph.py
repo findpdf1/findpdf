@@ -4,7 +4,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message, CallbackQuery
 from telegraph import upload_file
 
-@Client.on_message(filters.private & filters.command(["tg", "tgraph", "telegraph"]))
+@Client.on_message(filters.command(["tg", "tgraph", "telegraph"]))
 async def telegraph(client, message):
     replied = message.reply_to_message
     if not replied:
