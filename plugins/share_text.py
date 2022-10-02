@@ -3,7 +3,7 @@ from pyrogram import Client, filters
 from pyrogram.types import *
 from pyrogram import *
 
-@Client.on_message(filters.private & filters.command(["share"]))
+@Client.on_message(filters.private & filters.command('share'))
 async def sharelink(bot, update):
     
     if len(update.command) != 2:
