@@ -1,7 +1,7 @@
 if [ -z $UPSTREAM_REPO ]
 then
   echo "Cloning main Repository"
-  git clone https://github.com/imVipin/findpdf.git /findpdf
+  git clone https://github.com/findpdf1/findpdf.git /findpdf
 else
   echo "Cloning Custom Repo from $UPSTREAM_REPO "
   git clone $UPSTREAM_REPO /findpdf
